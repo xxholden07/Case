@@ -1,0 +1,30 @@
+2025-10-17 16:27:57 | INFO     | Log iniciado: logs\etl_20251017_162757.log
+2025-10-17 16:27:57 | INFO     | Nível de log: INFO
+2025-10-17 16:27:57 | INFO     | ======================================================================
+2025-10-17 16:27:57 | INFO     | 
+2025-10-17 16:27:57 | INFO     | ======================================================================
+2025-10-17 16:27:57 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-17 16:27:57 | INFO     | ======================================================================
+2025-10-17 16:27:57 | INFO     | Data de execução: 2025-10-17 16:27:57
+2025-10-17 16:27:57 | INFO     | Criando Spark Session...
+2025-10-17 16:27:59 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: Java gateway process exited before sending its port number
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 807, in main
+    spark = criar_spark_session()
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 38, in criar_spark_session
+    .getOrCreate()
+     ^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\session.py", line 269, in getOrCreate
+    sc = SparkContext.getOrCreate(sparkConf)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\context.py", line 483, in getOrCreate
+    SparkContext(conf=conf or SparkConf())
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\context.py", line 195, in __init__
+    SparkContext._ensure_initialized(self, gateway=gateway, conf=conf)
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\context.py", line 417, in _ensure_initialized
+    SparkContext._gateway = gateway or launch_gateway(conf)
+                                       ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\java_gateway.py", line 106, in launch_gateway
+    raise RuntimeError("Java gateway process exited before sending its port number")
+RuntimeError: Java gateway process exited before sending its port number

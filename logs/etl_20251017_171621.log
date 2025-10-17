@@ -1,0 +1,117 @@
+2025-10-17 17:16:21 | INFO     | Log iniciado: logs\etl_20251017_171621.log
+2025-10-17 17:16:21 | INFO     | Nível de log: INFO
+2025-10-17 17:16:21 | INFO     | ======================================================================
+2025-10-17 17:16:21 | INFO     | 
+2025-10-17 17:16:21 | INFO     | ======================================================================
+2025-10-17 17:16:21 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-17 17:16:21 | INFO     | ======================================================================
+2025-10-17 17:16:21 | INFO     | Data de execução: 2025-10-17 17:16:21
+2025-10-17 17:16:21 | INFO     | Criando Spark Session...
+2025-10-17 17:16:42 | INFO     | ✓ Spark Session criada com sucesso
+2025-10-17 17:16:42 | INFO     | 
+2025-10-17 17:16:42 | INFO     | ======================================================================
+2025-10-17 17:16:42 | INFO     | ETAPA: CARREGAMENTO DE DADOS (100% PySpark)
+2025-10-17 17:16:42 | INFO     | ======================================================================
+2025-10-17 17:16:42 | INFO     | Carregando dados de vendas: C:\Users\matheus.rodrigues\Downloads\Case\input\sales.csv
+2025-10-17 17:16:53 | INFO     | → df_sales (100% PySpark): 28,884 registros
+2025-10-17 17:16:53 | INFO     | Carregando arquivo de metas: C:\Users\matheus.rodrigues\Downloads\Case\input\metas por marca.csv
+2025-10-17 17:16:54 | INFO     | → df_metas: 20 registros
+2025-10-17 17:16:54 | INFO     | 
+2025-10-17 17:16:54 | INFO     | ======================================================================
+2025-10-17 17:16:54 | INFO     | ETAPA: EXPLORAÇÃO DOS DADOS
+2025-10-17 17:16:54 | INFO     | ======================================================================
+2025-10-17 17:16:54 | INFO     | ESTRUTURA DO ARQUIVO DE VENDAS
+2025-10-17 17:16:54 | INFO     | ESTATÍSTICAS DESCRITIVAS - VENDAS
+2025-10-17 17:17:05 | INFO     | AMOSTRA DOS DADOS DE VENDAS (5 registros)
+2025-10-17 17:17:05 | INFO     | CONTAGEM DE REGISTROS POR COLUNA
+2025-10-17 17:17:07 | INFO     | Código do Cliente             :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:07 | INFO     | cod material                  :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:08 | WARNING  | b2b_status                    :   28853 não-nulos |      31 nulos (0.11%)
+2025-10-17 17:17:09 | INFO     | volume_hl                     :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:10 | INFO     | valor                         :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:10 | INFO     | data_doc                      :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:11 | WARNING  | materialPackaging             :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:17:11 | WARNING  | brand                         :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:17:12 | WARNING  | brand_desc                    :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:17:12 | WARNING  | material                      :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:17:13 | INFO     | CEP_cliente                   :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:17:13 | INFO     | ESTRUTURA DO ARQUIVO DE METAS
+2025-10-17 17:17:13 | INFO     | DADOS DE METAS
+2025-10-17 17:17:13 | INFO     | 
+2025-10-17 17:17:13 | INFO     | ======================================================================
+2025-10-17 17:17:13 | INFO     | ETAPA: LIMPEZA E PREPARAÇÃO DOS DADOS
+2025-10-17 17:17:13 | INFO     | ======================================================================
+2025-10-17 17:17:13 | INFO     | Coluna data_doc convertida para DateType
+2025-10-17 17:17:13 | INFO     | Tratamento de valores ausentes:
+2025-10-17 17:17:15 | WARNING  | materialPackaging: 23 valores nulos preenchidos com 0
+2025-10-17 17:17:16 | WARNING  | brand: 23 valores nulos preenchidos com 0
+2025-10-17 17:17:16 | WARNING  | b2b_status: 31 valores nulos preenchidos com False
+2025-10-17 17:17:17 | WARNING  | brand_desc: 278 valores nulos preenchidos
+2025-10-17 17:17:17 | WARNING  | material: 278 valores nulos preenchidos
+2025-10-17 17:17:17 | INFO     | ✓ Limpeza concluída: 28884 registros preparados
+2025-10-17 17:17:17 | INFO     | 
+2025-10-17 17:17:17 | INFO     | ======================================================================
+2025-10-17 17:17:17 | INFO     | ETAPA: CRIAÇÃO DO MODELO DIMENSIONAL (STAR SCHEMA)
+2025-10-17 17:17:17 | INFO     | ======================================================================
+2025-10-17 17:17:17 | INFO     | Criando dim_cliente...
+2025-10-17 17:17:20 | INFO     | → dim_cliente: 58 registros
+2025-10-17 17:17:20 | INFO     | Criando dim_produto...
+2025-10-17 17:17:23 | INFO     | → dim_produto: 27 registros
+2025-10-17 17:17:23 | INFO     | Criando fato_vendas...
+2025-10-17 17:17:28 | INFO     | → fato_vendas: 28,884 registros
+2025-10-17 17:17:28 | INFO     | ✓ Modelo dimensional criado com sucesso!
+2025-10-17 17:17:28 | INFO     | Enriquecendo dim_cliente com dados de CEP...
+2025-10-17 17:17:28 | INFO     | 
+2025-10-17 17:17:28 | INFO     | ======================================================================
+2025-10-17 17:17:28 | INFO     | ETAPA: ENRIQUECIMENTO DE DADOS VIA API DE CEP
+2025-10-17 17:17:28 | INFO     | ======================================================================
+2025-10-17 17:17:28 | INFO     | Extraindo CEPs únicos para consulta...
+2025-10-17 17:17:30 | INFO     | → ceps_unicos: 21 registros
+2025-10-17 17:17:30 | INFO     | Consultando API ViaCEP...
+2025-10-17 17:18:17 | INFO     | 21 consultas de CEP concluídas
+2025-10-17 17:18:17 | INFO     | Criando DataFrame com dados enriquecidos...
+2025-10-17 17:18:19 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\clientserver.py", line 503, in send_command
+    self.socket.sendall(command.encode("utf-8"))
+ConnectionResetError: [WinError 10054] Foi forçado o cancelamento de uma conexão existente pelo host remoto
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\clientserver.py", line 506, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 823, in main
+    dim_cliente_enriquecida = enriquecer_dados_cep(spark, modelo['dim_cliente'])
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 711, in enriquecer_dados_cep
+    df_cep_enriquecido = spark.createDataFrame(dados_cep, schema)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\session.py", line 873, in createDataFrame
+    self._jvm.SparkSession.setActiveSession(self._jsparkSession)
+    ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\java_gateway.py", line 1709, in __getattr__
+    answer = self._gateway_client.send_command(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\java_gateway.py", line 1053, in send_command
+    response = self.send_command(command, binary=binary)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\java_gateway.py", line 1036, in send_command
+    connection = self._get_connection()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\clientserver.py", line 284, in _get_connection
+    connection = self._create_new_connection()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\clientserver.py", line 291, in _create_new_connection
+    connection.connect_to_java_server()
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\py4j\clientserver.py", line 438, in connect_to_java_server
+    self.socket.connect((self.java_address, self.java_port))
+ConnectionRefusedError: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente

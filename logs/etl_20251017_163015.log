@@ -1,0 +1,59 @@
+2025-10-17 16:30:15 | INFO     | Log iniciado: logs\etl_20251017_163015.log
+2025-10-17 16:30:15 | INFO     | Nível de log: INFO
+2025-10-17 16:30:15 | INFO     | ======================================================================
+2025-10-17 16:30:15 | INFO     | 
+2025-10-17 16:30:15 | INFO     | ======================================================================
+2025-10-17 16:30:15 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-17 16:30:15 | INFO     | ======================================================================
+2025-10-17 16:30:15 | INFO     | Data de execução: 2025-10-17 16:30:15
+2025-10-17 16:30:15 | INFO     | Criando Spark Session...
+2025-10-17 16:30:25 | INFO     | ✓ Spark Session criada com sucesso
+2025-10-17 16:30:25 | INFO     | 
+2025-10-17 16:30:25 | INFO     | ======================================================================
+2025-10-17 16:30:25 | INFO     | ETAPA: CARREGAMENTO DE DADOS (100% PySpark)
+2025-10-17 16:30:25 | INFO     | ======================================================================
+2025-10-17 16:30:25 | INFO     | Carregando dados de vendas: C:\Users\matheus.rodrigues\Downloads\Case\input\sales.csv
+2025-10-17 16:30:38 | INFO     | → df_sales (100% PySpark): 28,884 registros
+2025-10-17 16:30:38 | INFO     | Carregando arquivo de metas: C:\Users\matheus.rodrigues\Downloads\Case\input\metas por marca.csv
+2025-10-17 16:30:39 | INFO     | → df_metas: 20 registros
+2025-10-17 16:30:39 | INFO     | 
+2025-10-17 16:30:39 | INFO     | ======================================================================
+2025-10-17 16:30:39 | INFO     | ETAPA: EXPLORAÇÃO DOS DADOS
+2025-10-17 16:30:39 | INFO     | ======================================================================
+2025-10-17 16:30:39 | INFO     | ESTRUTURA DO ARQUIVO DE VENDAS
+2025-10-17 16:30:39 | INFO     | ESTATÍSTICAS DESCRITIVAS - VENDAS
+2025-10-17 16:30:44 | INFO     | AMOSTRA DOS DADOS DE VENDAS (5 registros)
+2025-10-17 16:30:44 | INFO     | CONTAGEM DE REGISTROS POR COLUNA
+2025-10-17 16:30:45 | INFO     | Código do Cliente             :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:45 | INFO     | cod material                  :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:46 | WARNING  | b2b_status                    :   28853 não-nulos |      31 nulos (0.11%)
+2025-10-17 16:30:47 | INFO     | volume_hl                     :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:47 | INFO     | valor                         :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:48 | INFO     | data_doc                      :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:48 | WARNING  | materialPackaging             :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 16:30:49 | WARNING  | brand                         :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 16:30:49 | WARNING  | brand_desc                    :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 16:30:50 | WARNING  | material                      :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 16:30:50 | INFO     | CEP_cliente                   :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 16:30:50 | INFO     | ESTRUTURA DO ARQUIVO DE METAS
+2025-10-17 16:30:50 | INFO     | DADOS DE METAS
+2025-10-17 16:30:50 | INFO     | 
+2025-10-17 16:30:50 | INFO     | ======================================================================
+2025-10-17 16:30:50 | INFO     | ETAPA: LIMPEZA E PREPARAÇÃO DOS DADOS
+2025-10-17 16:30:50 | INFO     | ======================================================================
+2025-10-17 16:30:51 | INFO     | Coluna data_doc convertida para DateType
+2025-10-17 16:30:51 | INFO     | Tratamento de valores ausentes:
+2025-10-17 16:30:52 | WARNING  | materialPackaging: 23 valores nulos preenchidos com 0
+2025-10-17 16:30:53 | WARNING  | brand: 23 valores nulos preenchidos com 0
+2025-10-17 16:30:53 | WARNING  | b2b_status: 31 valores nulos preenchidos com False
+2025-10-17 16:30:54 | WARNING  | brand_desc: 278 valores nulos preenchidos
+2025-10-17 16:30:54 | WARNING  | material: 278 valores nulos preenchidos
+2025-10-17 16:30:54 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: ETLLogger.validation() missing 1 required positional argument: 'passed'
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 816, in main
+    df_sales_clean = limpar_dados(df_sales)
+                     ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 198, in limpar_dados
+    logger.validation(f"Limpeza concluída: {total_registros} registros preparados")
+TypeError: ETLLogger.validation() missing 1 required positional argument: 'passed'
+2025-10-17 16:30:55 | INFO     | Sessão Spark encerrada
