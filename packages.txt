@@ -1,2 +1,0 @@
-# Arquivo packages.txt para dependências do sistema no Streamlit Cloud
-# Este arquivo especifica pacotes do sistema que devem ser instalados via apt-get

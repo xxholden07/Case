@@ -580,7 +580,7 @@ elif page == "Dados Detalhados":
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #7f8c8d; font-size: 0.9rem;'>
-    Dashboard desenvolvido com Apache Spark + Streamlit | 100% PySpark Processing<br>
+    Dev= Matheus Rodrigues<br>
     Dados processados em {data}
 </div>
 """.format(data=datetime.now().strftime('%d/%m/%Y')), unsafe_allow_html=True)
