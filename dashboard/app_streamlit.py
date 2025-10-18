@@ -291,8 +291,7 @@ elif page == "Análise de Clientes":
                 x='volume_medio_3m',
                 y='volume_medio_6m',
                 title='Volume Médio: 3M vs 6M',
-                labels={'volume_medio_3m': 'Volume 3M (HL)', 'volume_medio_6m': 'Volume 6M (HL)'},
-                trendline='ols'
+                labels={'volume_medio_3m': 'Volume 3M (HL)', 'volume_medio_6m': 'Volume 6M (HL)'}
             )
             st.plotly_chart(fig5, use_container_width=True)
     
