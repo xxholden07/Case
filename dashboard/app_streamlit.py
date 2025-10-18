@@ -76,7 +76,9 @@ st.markdown("""
 # Conexão com banco SQLite
 @st.cache_resource
 def get_connection():
-    db_path = r"C:\Users\matheus.rodrigues\Downloads\Case\output\vendas_analytics.db"
+    import os
+    # Caminho relativo ao diretório do projeto
+    db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "output", "vendas_analytics.db")
     return sqlite3.connect(db_path, check_same_thread=False)
 
 # Funções de carregamento de dados
