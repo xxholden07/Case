@@ -1,0 +1,132 @@
+2025-10-17 17:24:15 | INFO     | Log iniciado: logs\etl_20251017_172415.log
+2025-10-17 17:24:15 | INFO     | Nível de log: INFO
+2025-10-17 17:24:15 | INFO     | ======================================================================
+2025-10-17 17:24:15 | INFO     | 
+2025-10-17 17:24:15 | INFO     | ======================================================================
+2025-10-17 17:24:15 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-17 17:24:15 | INFO     | ======================================================================
+2025-10-17 17:24:15 | INFO     | Data de execução: 2025-10-17 17:24:15
+2025-10-17 17:24:15 | INFO     | Criando Spark Session...
+2025-10-17 17:24:24 | INFO     | ✓ Spark Session criada com sucesso
+2025-10-17 17:24:24 | INFO     | 
+2025-10-17 17:24:24 | INFO     | ======================================================================
+2025-10-17 17:24:24 | INFO     | ETAPA: CARREGAMENTO DE DADOS (100% PySpark)
+2025-10-17 17:24:24 | INFO     | ======================================================================
+2025-10-17 17:24:24 | INFO     | Carregando dados de vendas: C:\Users\matheus.rodrigues\Downloads\Case\input\sales.csv
+2025-10-17 17:24:34 | INFO     | → df_sales (100% PySpark): 28,884 registros
+2025-10-17 17:24:34 | INFO     | Carregando arquivo de metas: C:\Users\matheus.rodrigues\Downloads\Case\input\metas por marca.csv
+2025-10-17 17:24:35 | INFO     | → df_metas: 20 registros
+2025-10-17 17:24:35 | INFO     | 
+2025-10-17 17:24:35 | INFO     | ======================================================================
+2025-10-17 17:24:35 | INFO     | ETAPA: EXPLORAÇÃO DOS DADOS
+2025-10-17 17:24:35 | INFO     | ======================================================================
+2025-10-17 17:24:35 | INFO     | ESTRUTURA DO ARQUIVO DE VENDAS
+2025-10-17 17:24:35 | INFO     | ESTATÍSTICAS DESCRITIVAS - VENDAS
+2025-10-17 17:24:44 | INFO     | AMOSTRA DOS DADOS DE VENDAS (5 registros)
+2025-10-17 17:24:44 | INFO     | CONTAGEM DE REGISTROS POR COLUNA
+2025-10-17 17:24:45 | INFO     | Código do Cliente             :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:45 | INFO     | cod material                  :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:46 | WARNING  | b2b_status                    :   28853 não-nulos |      31 nulos (0.11%)
+2025-10-17 17:24:47 | INFO     | volume_hl                     :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:47 | INFO     | valor                         :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:48 | INFO     | data_doc                      :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:48 | WARNING  | materialPackaging             :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:24:49 | WARNING  | brand                         :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:24:49 | WARNING  | brand_desc                    :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:24:49 | WARNING  | material                      :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:24:50 | INFO     | CEP_cliente                   :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:24:50 | INFO     | ESTRUTURA DO ARQUIVO DE METAS
+2025-10-17 17:24:50 | INFO     | DADOS DE METAS
+2025-10-17 17:24:50 | INFO     | 
+2025-10-17 17:24:50 | INFO     | ======================================================================
+2025-10-17 17:24:50 | INFO     | ETAPA: LIMPEZA E PREPARAÇÃO DOS DADOS
+2025-10-17 17:24:50 | INFO     | ======================================================================
+2025-10-17 17:24:50 | INFO     | Coluna data_doc convertida para DateType
+2025-10-17 17:24:50 | INFO     | Tratamento de valores ausentes:
+2025-10-17 17:24:52 | WARNING  | materialPackaging: 23 valores nulos preenchidos com 0
+2025-10-17 17:24:52 | WARNING  | brand: 23 valores nulos preenchidos com 0
+2025-10-17 17:24:52 | WARNING  | b2b_status: 31 valores nulos preenchidos com False
+2025-10-17 17:24:52 | WARNING  | brand_desc: 278 valores nulos preenchidos
+2025-10-17 17:24:53 | WARNING  | material: 278 valores nulos preenchidos
+2025-10-17 17:24:53 | INFO     | ✓ Limpeza concluída: 28884 registros preparados
+2025-10-17 17:24:53 | INFO     | 
+2025-10-17 17:24:53 | INFO     | ======================================================================
+2025-10-17 17:24:53 | INFO     | ETAPA: CRIAÇÃO DO MODELO DIMENSIONAL (STAR SCHEMA)
+2025-10-17 17:24:53 | INFO     | ======================================================================
+2025-10-17 17:24:53 | INFO     | Criando dim_cliente...
+2025-10-17 17:24:55 | INFO     | → dim_cliente: 58 registros
+2025-10-17 17:24:55 | INFO     | Criando dim_produto...
+2025-10-17 17:24:56 | INFO     | → dim_produto: 27 registros
+2025-10-17 17:24:56 | INFO     | Criando fato_vendas...
+2025-10-17 17:24:58 | INFO     | → fato_vendas: 28,884 registros
+2025-10-17 17:24:58 | INFO     | ✓ Modelo dimensional criado com sucesso!
+2025-10-17 17:24:58 | INFO     | Enriquecendo dim_cliente com dados de CEP...
+2025-10-17 17:24:58 | INFO     | 
+2025-10-17 17:24:58 | INFO     | ======================================================================
+2025-10-17 17:24:58 | INFO     | ETAPA: ENRIQUECIMENTO DE DADOS VIA API DE CEP
+2025-10-17 17:24:58 | INFO     | ======================================================================
+2025-10-17 17:24:58 | INFO     | Extraindo CEPs únicos para consulta...
+2025-10-17 17:25:00 | INFO     | → ceps_unicos: 21 registros
+2025-10-17 17:25:00 | INFO     | Consultando API ViaCEP...
+2025-10-17 17:25:33 | INFO     |   Progresso: 10/21 CEPs consultados
+2025-10-17 17:25:42 | INFO     |   Progresso: 20/21 CEPs consultados
+2025-10-17 17:25:43 | INFO     | 21 consultas de CEP concluídas
+2025-10-17 17:25:43 | INFO     | Criando DataFrame com dados enriquecidos...
+2025-10-17 17:25:43 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: Could not serialize object: IndexError: tuple index out of range
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\serializers.py", line 458, in dumps
+    return cloudpickle.dumps(obj, pickle_protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 73, in dumps
+    cp.dump(obj)
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 602, in dump
+    return Pickler.dump(self, obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 692, in reducer_override
+    return self._function_reduce(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 565, in _function_reduce
+    return self._dynamic_function_reduce(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 546, in _dynamic_function_reduce
+    state = _function_getstate(func)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle_fast.py", line 157, in _function_getstate
+    f_globals_ref = _extract_code_globals(func.__code__)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\cloudpickle\cloudpickle.py", line 334, in _extract_code_globals
+    out_names = {names[oparg]: None for _, oparg in _walk_global_ops(co)}
+                 ~~~~~^^^^^^^
+IndexError: tuple index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 823, in main
+    dim_cliente_enriquecida = enriquecer_dados_cep(spark, modelo['dim_cliente'])
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 711, in enriquecer_dados_cep
+    df_cep_enriquecido = spark.createDataFrame(dados_cep, schema=schema_cep)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\session.py", line 894, in createDataFrame
+    return self._create_dataframe(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\session.py", line 938, in _create_dataframe
+    jrdd = self._jvm.SerDeUtil.toJavaArray(rdd._to_java_object_rdd())
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\rdd.py", line 3113, in _to_java_object_rdd
+    return self.ctx._jvm.SerDeUtil.pythonToJava(rdd._jrdd, True)
+                                                ^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\rdd.py", line 3505, in _jrdd
+    wrapped_func = _wrap_function(
+                   ^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\rdd.py", line 3362, in _wrap_function
+    pickled_command, broadcast_vars, env, includes = _prepare_for_python_RDD(sc, command)
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\rdd.py", line 3345, in _prepare_for_python_RDD
+    pickled_command = ser.dumps(command)
+                      ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\serializers.py", line 468, in dumps
+    raise pickle.PicklingError(msg)
+_pickle.PicklingError: Could not serialize object: IndexError: tuple index out of range
+2025-10-17 17:25:44 | INFO     | Sessão Spark encerrada

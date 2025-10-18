@@ -1,0 +1,96 @@
+2025-10-17 17:22:00 | INFO     | Log iniciado: logs\etl_20251017_172200.log
+2025-10-17 17:22:00 | INFO     | Nível de log: INFO
+2025-10-17 17:22:00 | INFO     | ======================================================================
+2025-10-17 17:22:00 | INFO     | 
+2025-10-17 17:22:00 | INFO     | ======================================================================
+2025-10-17 17:22:00 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-17 17:22:00 | INFO     | ======================================================================
+2025-10-17 17:22:00 | INFO     | Data de execução: 2025-10-17 17:22:00
+2025-10-17 17:22:00 | INFO     | Criando Spark Session...
+2025-10-17 17:22:09 | INFO     | ✓ Spark Session criada com sucesso
+2025-10-17 17:22:09 | INFO     | 
+2025-10-17 17:22:09 | INFO     | ======================================================================
+2025-10-17 17:22:09 | INFO     | ETAPA: CARREGAMENTO DE DADOS (100% PySpark)
+2025-10-17 17:22:09 | INFO     | ======================================================================
+2025-10-17 17:22:09 | INFO     | Carregando dados de vendas: C:\Users\matheus.rodrigues\Downloads\Case\input\sales.csv
+2025-10-17 17:22:16 | INFO     | → df_sales (100% PySpark): 28,884 registros
+2025-10-17 17:22:16 | INFO     | Carregando arquivo de metas: C:\Users\matheus.rodrigues\Downloads\Case\input\metas por marca.csv
+2025-10-17 17:22:17 | INFO     | → df_metas: 20 registros
+2025-10-17 17:22:17 | INFO     | 
+2025-10-17 17:22:17 | INFO     | ======================================================================
+2025-10-17 17:22:17 | INFO     | ETAPA: EXPLORAÇÃO DOS DADOS
+2025-10-17 17:22:17 | INFO     | ======================================================================
+2025-10-17 17:22:17 | INFO     | ESTRUTURA DO ARQUIVO DE VENDAS
+2025-10-17 17:22:17 | INFO     | ESTATÍSTICAS DESCRITIVAS - VENDAS
+2025-10-17 17:22:22 | INFO     | AMOSTRA DOS DADOS DE VENDAS (5 registros)
+2025-10-17 17:22:22 | INFO     | CONTAGEM DE REGISTROS POR COLUNA
+2025-10-17 17:22:23 | INFO     | Código do Cliente             :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:24 | INFO     | cod material                  :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:25 | WARNING  | b2b_status                    :   28853 não-nulos |      31 nulos (0.11%)
+2025-10-17 17:22:25 | INFO     | volume_hl                     :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:26 | INFO     | valor                         :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:26 | INFO     | data_doc                      :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:27 | WARNING  | materialPackaging             :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:22:27 | WARNING  | brand                         :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-17 17:22:28 | WARNING  | brand_desc                    :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:22:28 | WARNING  | material                      :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-17 17:22:29 | INFO     | CEP_cliente                   :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-17 17:22:29 | INFO     | ESTRUTURA DO ARQUIVO DE METAS
+2025-10-17 17:22:29 | INFO     | DADOS DE METAS
+2025-10-17 17:22:29 | INFO     | 
+2025-10-17 17:22:29 | INFO     | ======================================================================
+2025-10-17 17:22:29 | INFO     | ETAPA: LIMPEZA E PREPARAÇÃO DOS DADOS
+2025-10-17 17:22:29 | INFO     | ======================================================================
+2025-10-17 17:22:29 | INFO     | Coluna data_doc convertida para DateType
+2025-10-17 17:22:29 | INFO     | Tratamento de valores ausentes:
+2025-10-17 17:22:30 | WARNING  | materialPackaging: 23 valores nulos preenchidos com 0
+2025-10-17 17:22:30 | WARNING  | brand: 23 valores nulos preenchidos com 0
+2025-10-17 17:22:31 | WARNING  | b2b_status: 31 valores nulos preenchidos com False
+2025-10-17 17:22:31 | WARNING  | brand_desc: 278 valores nulos preenchidos
+2025-10-17 17:22:31 | WARNING  | material: 278 valores nulos preenchidos
+2025-10-17 17:22:31 | INFO     | ✓ Limpeza concluída: 28884 registros preparados
+2025-10-17 17:22:31 | INFO     | 
+2025-10-17 17:22:31 | INFO     | ======================================================================
+2025-10-17 17:22:31 | INFO     | ETAPA: CRIAÇÃO DO MODELO DIMENSIONAL (STAR SCHEMA)
+2025-10-17 17:22:31 | INFO     | ======================================================================
+2025-10-17 17:22:31 | INFO     | Criando dim_cliente...
+2025-10-17 17:22:33 | INFO     | → dim_cliente: 58 registros
+2025-10-17 17:22:33 | INFO     | Criando dim_produto...
+2025-10-17 17:22:34 | INFO     | → dim_produto: 27 registros
+2025-10-17 17:22:34 | INFO     | Criando fato_vendas...
+2025-10-17 17:22:36 | INFO     | → fato_vendas: 28,884 registros
+2025-10-17 17:22:36 | INFO     | ✓ Modelo dimensional criado com sucesso!
+2025-10-17 17:22:36 | INFO     | Enriquecendo dim_cliente com dados de CEP...
+2025-10-17 17:22:36 | INFO     | 
+2025-10-17 17:22:36 | INFO     | ======================================================================
+2025-10-17 17:22:36 | INFO     | ETAPA: ENRIQUECIMENTO DE DADOS VIA API DE CEP
+2025-10-17 17:22:36 | INFO     | ======================================================================
+2025-10-17 17:22:36 | INFO     | Extraindo CEPs únicos para consulta...
+2025-10-17 17:22:43 | INFO     | → ceps_unicos: 21 registros
+2025-10-17 17:22:43 | INFO     | Consultando API ViaCEP...
+2025-10-17 17:22:52 | INFO     |   Progresso: 10/21 CEPs consultados
+2025-10-17 17:23:01 | INFO     |   Progresso: 20/21 CEPs consultados
+2025-10-17 17:23:02 | INFO     | 21 consultas de CEP concluídas
+2025-10-17 17:23:02 | INFO     | Criando DataFrame com dados enriquecidos...
+2025-10-17 17:23:02 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: 'DataFrame' object has no attribute 'iteritems'
+Traceback (most recent call last):
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 822, in main
+    dim_cliente_enriquecida = enriquecer_dados_cep(spark, modelo['dim_cliente'])
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\Downloads\Case\scripts\spark_analysis.py", line 707, in enriquecer_dados_cep
+    df_cep_enriquecido = spark.createDataFrame(df_cep_pandas)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\session.py", line 891, in createDataFrame
+    return super(SparkSession, self).createDataFrame(  # type: ignore[call-overload]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\pandas\conversion.py", line 436, in createDataFrame
+    converted_data = self._convert_from_pandas(data, schema, timezone)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyspark\sql\pandas\conversion.py", line 474, in _convert_from_pandas
+    for column, series in pdf.iteritems():
+                          ^^^^^^^^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\core\generic.py", line 6321, in __getattr__
+    return object.__getattribute__(self, name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DataFrame' object has no attribute 'iteritems'. Did you mean: 'isetitem'?
+2025-10-17 17:23:03 | INFO     | Sessão Spark encerrada
