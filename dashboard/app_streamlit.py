@@ -12,7 +12,7 @@ from datetime import datetime
 # Configuração da página
 st.set_page_config(
     page_title="Analytics de Vendas",
-    page_icon="📊",
+    page_icon="�",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -131,7 +131,7 @@ st.markdown(f"<p style='text-align: center; color: #7f8c8d;'>Atualizado em {date
 st.sidebar.title("Navegação")
 page = st.sidebar.radio(
     "Escolha a seção:",
-    ["Panorama Geral", "Análise de Clientes", "Distribuição de Metas", "Performance por Marca", "Dados Detalhados"]
+    ["Panorama Geral", "Análise de Clientes", "Distribuição de Metas", "Performance por Marca", "Mapa Geográfico", "Dados Detalhados"]
 )
 
 # ============================================================================
@@ -246,6 +246,17 @@ elif page == "Análise de Clientes":
     # Carregar dados
     visao = load_visao_consolidada()
     fato = load_fato_vendas()
+    dim_cliente = load_dim_cliente()
+    
+    # Fazer merge para adicionar informações do cliente
+    visao = visao.merge(
+        dim_cliente[['cliente_id', 'cep']], 
+        on='cliente_id', 
+        how='left'
+    )
+    
+    # Criar coluna com identificação do cliente (usando apenas o ID formatado)
+    visao['cliente_display'] = 'Cliente ' + visao['cliente_id'].astype(str)
     
     # Filtros
     st.markdown('<div class="sub-header">Filtros</div>', unsafe_allow_html=True)
@@ -269,14 +280,16 @@ elif page == "Análise de Clientes":
     
     fig4 = px.bar(
         top_clientes,
-        x='cliente_id',
+        x='cliente_display',
         y='volume_medio_3m',
         title='Volume Médio nos Últimos 3 Meses (HL)',
-        labels={'cliente_id': 'Cliente ID', 'volume_medio_3m': 'Volume Médio 3M (HL)'},
+        labels={'cliente_display': 'Cliente', 'volume_medio_3m': 'Volume Médio 3M (HL)'},
         color='volume_medio_3m',
-        color_continuous_scale='Viridis'
+        color_continuous_scale='Viridis',
+        hover_data={'cliente_id': True, 'cep': True}
     )
     fig4.update_layout(showlegend=False, height=400)
+    fig4.update_xaxes(tickangle=-45)
     st.plotly_chart(fig4, use_container_width=True)
     
     # Comparação 3M vs 6M
@@ -309,7 +322,7 @@ elif page == "Análise de Clientes":
     # Tabela de clientes
     st.markdown('<div class="sub-header">Detalhamento dos Top Clientes</div>', unsafe_allow_html=True)
     
-    display_cols = ['cliente_id', 'data_ultima_compra', 'volume_medio_3m', 'volume_medio_6m', 'share_b2b_3m', 'share_b2b_6m']
+    display_cols = ['cliente_id', 'cep', 'data_ultima_compra', 'volume_medio_3m', 'volume_medio_6m', 'share_b2b_3m', 'share_b2b_6m']
     available_cols = [col for col in display_cols if col in top_clientes.columns]
     
     st.dataframe(
@@ -322,6 +335,7 @@ elif page == "Análise de Clientes":
         use_container_width=True,
         column_config={
             "cliente_id": "ID Cliente",
+            "cep": "CEP",
             "data_ultima_compra": "Última Compra",
             "volume_medio_3m": "Volume 3M",
             "volume_medio_6m": "Volume 6M",
@@ -337,6 +351,17 @@ elif page == "Distribuição de Metas":
     
     # Carregar dados
     metas = load_metas_por_cliente()
+    dim_cliente = load_dim_cliente()
+    
+    # Fazer merge para adicionar informações do cliente
+    metas = metas.merge(
+        dim_cliente[['cliente_id', 'cep']], 
+        on='cliente_id', 
+        how='left'
+    )
+    
+    # Criar coluna com identificação do cliente (usando apenas o ID formatado)
+    metas['cliente_display'] = 'Cliente ' + metas['cliente_id'].astype(str)
     
     # Filtros
     st.markdown('<div class="sub-header">Filtros</div>', unsafe_allow_html=True)
@@ -396,32 +421,35 @@ elif page == "Distribuição de Metas":
     # Distribuição de Metas por Cliente
     st.markdown('<div class="sub-header">Top 20 Clientes por Meta Total</div>', unsafe_allow_html=True)
     
-    meta_por_cliente = metas_filtradas.groupby('cliente_id')['meta_cliente'].sum().reset_index()
+    meta_por_cliente = metas_filtradas.groupby(['cliente_id', 'cliente_display'])['meta_cliente'].sum().reset_index()
     meta_por_cliente = meta_por_cliente.sort_values('meta_cliente', ascending=False).head(20)
     
     fig8 = px.bar(
         meta_por_cliente,
-        x='cliente_id',
+        x='cliente_display',
         y='meta_cliente',
         title='Meta Total por Cliente (Top 20)',
-        labels={'cliente_id': 'Cliente ID', 'meta_cliente': 'Meta Total (HL)'},
+        labels={'cliente_display': 'Cliente', 'meta_cliente': 'Meta Total (HL)'},
         color='meta_cliente',
-        color_continuous_scale='RdYlGn'
+        color_continuous_scale='RdYlGn',
+        hover_data={'cliente_id': True}
     )
+    fig8.update_xaxes(tickangle=-45)
     st.plotly_chart(fig8, use_container_width=True)
     
     # Participação percentual
     st.markdown('<div class="sub-header">Análise de Participação dos Clientes</div>', unsafe_allow_html=True)
     
-    top_participacao = metas_filtradas.nlargest(15, 'percentual_participacao')[['cliente_id', 'marca', 'percentual_participacao', 'meta_cliente']]
+    top_participacao = metas_filtradas.nlargest(15, 'percentual_participacao')[['cliente_id', 'cliente_display', 'marca', 'percentual_participacao', 'meta_cliente', 'cep']]
     
     fig9 = px.treemap(
         metas_filtradas,
-        path=['marca', 'cliente_id'],
+        path=['marca', 'cliente_display'],
         values='meta_cliente',
         title='Hierarquia: Marca → Cliente',
         color='percentual_participacao',
-        color_continuous_scale='Blues'
+        color_continuous_scale='Blues',
+        hover_data={'cliente_id': True}
     )
     st.plotly_chart(fig9, use_container_width=True)
 
@@ -515,7 +543,414 @@ elif page == "Performance por Marca":
     st.plotly_chart(fig11, use_container_width=True)
 
 # ============================================================================
-# PÁGINA 5: DADOS DETALHADOS
+# PÁGINA 5: MAPA GEOGRÁFICO
+# ============================================================================
+elif page == "Mapa Geográfico":
+    
+    st.markdown('<div class="main-header">Análise Geográfica de Vendas</div>', unsafe_allow_html=True)
+    
+    # Carregar dados
+    fato = load_fato_vendas()
+    dim_cliente = load_dim_cliente()
+    
+    # Merge para obter dados geográficos (usando sk_cliente como chave)
+    df_geo = fato.merge(dim_cliente[['sk_cliente', 'cliente_id', 'cep', 'cidade', 'estado']], on='sk_cliente', how='left')
+    
+    # Filtros
+    st.markdown('<div class="sub-header">Filtros</div>', unsafe_allow_html=True)
+    col_f1, col_f2 = st.columns(2)
+    
+    with col_f1:
+        marcas_disponiveis = ['Todas'] + sorted(df_geo['marca'].dropna().unique().tolist())
+        marca_geo_filtro = st.selectbox("Filtrar por Marca", marcas_disponiveis, key='marca_geo')
+    
+    with col_f2:
+        # Filtrar estados que existem
+        estados_disponiveis = df_geo['estado'].dropna().unique().tolist()
+        if estados_disponiveis:
+            estados_filtro = st.multiselect("Filtrar Estados", ['Todos'] + sorted(estados_disponiveis), default=['Todos'], key='estados_geo')
+    
+    # Aplicar filtros
+    df_geo_filtrado = df_geo.copy()
+    if marca_geo_filtro != 'Todas':
+        df_geo_filtrado = df_geo_filtrado[df_geo_filtrado['marca'] == marca_geo_filtro]
+    
+    if 'estados_filtro' in locals() and 'Todos' not in estados_filtro:
+        df_geo_filtrado = df_geo_filtrado[df_geo_filtrado['estado'].isin(estados_filtro)]
+    
+    # Métricas Gerais
+    st.markdown('<div class="sub-header">Resumo Geográfico</div>', unsafe_allow_html=True)
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        total_estados = df_geo_filtrado['estado'].nunique()
+        st.metric("Estados Atendidos", f"{total_estados}")
+    
+    with col2:
+        total_cidades = df_geo_filtrado['cidade'].nunique()
+        st.metric("Cidades Atendidas", f"{total_cidades}")
+    
+    with col3:
+        total_volume = df_geo_filtrado['volume_hl'].sum()
+        st.metric("Volume Total", f"{total_volume:,.2f} HL")
+    
+    with col4:
+        total_clientes = df_geo_filtrado['cliente_id'].nunique()
+        st.metric("Clientes", f"{total_clientes}")
+    
+    # Mapa Geográfico Interativo
+    st.markdown('<div class="sub-header">Mapa Interativo de Vendas por Estado</div>', unsafe_allow_html=True)
+    
+    # Coordenadas dos estados brasileiros (capitais como referência)
+    coordenadas_estados = {
+        'AC': {'lat': -9.0238, 'lon': -70.8120, 'nome': 'Acre'},
+        'AL': {'lat': -9.5713, 'lon': -36.7819, 'nome': 'Alagoas'},
+        'AP': {'lat': 0.0389, 'lon': -51.0664, 'nome': 'Amapá'},
+        'AM': {'lat': -3.1190, 'lon': -60.0217, 'nome': 'Amazonas'},
+        'BA': {'lat': -12.9714, 'lon': -38.5014, 'nome': 'Bahia'},
+        'CE': {'lat': -3.7172, 'lon': -38.5433, 'nome': 'Ceará'},
+        'DF': {'lat': -15.7939, 'lon': -47.8828, 'nome': 'Distrito Federal'},
+        'ES': {'lat': -20.3155, 'lon': -40.3128, 'nome': 'Espírito Santo'},
+        'GO': {'lat': -16.6864, 'lon': -49.2643, 'nome': 'Goiás'},
+        'MA': {'lat': -2.5387, 'lon': -44.2825, 'nome': 'Maranhão'},
+        'MT': {'lat': -15.6014, 'lon': -56.0979, 'nome': 'Mato Grosso'},
+        'MS': {'lat': -20.4486, 'lon': -54.6295, 'nome': 'Mato Grosso do Sul'},
+        'MG': {'lat': -19.9167, 'lon': -43.9345, 'nome': 'Minas Gerais'},
+        'PA': {'lat': -1.4554, 'lon': -48.4898, 'nome': 'Pará'},
+        'PB': {'lat': -7.1219, 'lon': -34.8450, 'nome': 'Paraíba'},
+        'PR': {'lat': -25.4195, 'lon': -49.2646, 'nome': 'Paraná'},
+        'PE': {'lat': -8.0476, 'lon': -34.8770, 'nome': 'Pernambuco'},
+        'PI': {'lat': -5.0949, 'lon': -42.8042, 'nome': 'Piauí'},
+        'RJ': {'lat': -22.9068, 'lon': -43.1729, 'nome': 'Rio de Janeiro'},
+        'RN': {'lat': -5.7945, 'lon': -35.2110, 'nome': 'Rio Grande do Norte'},
+        'RS': {'lat': -30.0346, 'lon': -51.2177, 'nome': 'Rio Grande do Sul'},
+        'RO': {'lat': -8.7612, 'lon': -63.9004, 'nome': 'Rondônia'},
+        'RR': {'lat': 2.8235, 'lon': -60.6758, 'nome': 'Roraima'},
+        'SC': {'lat': -27.5954, 'lon': -48.5480, 'nome': 'Santa Catarina'},
+        'SP': {'lat': -23.5505, 'lon': -46.6333, 'nome': 'São Paulo'},
+        'SE': {'lat': -10.9472, 'lon': -37.0731, 'nome': 'Sergipe'},
+        'TO': {'lat': -10.2491, 'lon': -48.3243, 'nome': 'Tocantins'}
+    }
+    
+    # Criar dados para o mapa
+    vendas_estado = df_geo_filtrado.groupby('estado').agg({
+        'volume_hl': 'sum',
+        'valor': 'sum',
+        'cliente_id': 'nunique'
+    }).reset_index()
+    
+    # Adicionar coordenadas
+    vendas_estado['lat'] = vendas_estado['estado'].map(lambda x: coordenadas_estados.get(x, {}).get('lat'))
+    vendas_estado['lon'] = vendas_estado['estado'].map(lambda x: coordenadas_estados.get(x, {}).get('lon'))
+    vendas_estado['nome_estado'] = vendas_estado['estado'].map(lambda x: coordenadas_estados.get(x, {}).get('nome', x))
+    
+    # Remover estados sem coordenadas
+    vendas_estado_mapa = vendas_estado.dropna(subset=['lat', 'lon'])
+    
+    if len(vendas_estado_mapa) > 0:
+        # Criar mapa coroplético (pinta os estados inteiros)
+        # URL do GeoJSON dos estados brasileiros
+        geojson_url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+        
+        # Preparar dados para o mapa coroplético
+        vendas_estado_mapa['estado_sigla'] = vendas_estado_mapa['estado']
+        
+        fig_mapa = px.choropleth_mapbox(
+            vendas_estado_mapa,
+            geojson=geojson_url,
+            locations='estado',
+            featureidkey="properties.sigla",
+            color='volume_hl',
+            hover_name='nome_estado',
+            hover_data={
+                'estado': True,
+                'volume_hl': ':.2f',
+                'valor': ':.2f',
+                'cliente_id': True
+            },
+            color_continuous_scale=[
+                [0, '#FFF5F0'],      # Branco rosado
+                [0.2, '#FEE0D2'],    # Rosa claro
+                [0.4, '#FCBBA1'],    # Coral claro
+                [0.6, '#FC9272'],    # Coral
+                [0.8, '#FB6A4A'],    # Vermelho-coral
+                [1, '#CB181D']       # Vermelho escuro
+            ],
+            labels={
+                'volume_hl': 'Volume (HL)',
+                'valor': 'Valor (R$)',
+                'cliente_id': 'Nº Clientes',
+                'estado': 'UF'
+            },
+            title='Mapa de Vendas por Estado - Brasil',
+            zoom=3.5,
+            center=dict(lat=-14, lon=-52),
+            mapbox_style='carto-positron',
+            opacity=0.7
+        )
+        
+        fig_mapa.update_layout(
+            height=700,
+            margin={"r":0,"t":60,"l":0,"b":0},
+            font=dict(family="Arial", size=12),
+            title=dict(
+                font=dict(size=20, family='Arial Black'),
+                x=0.5,
+                xanchor='center'
+            ),
+            coloraxis_colorbar=dict(
+                title="Volume (HL)",
+                thickness=25,
+                len=0.7,
+                tickfont=dict(size=11),
+                x=1.02
+            ),
+            mapbox=dict(
+                bearing=0,
+                pitch=0
+            )
+        )
+        
+        st.plotly_chart(fig_mapa, use_container_width=True)
+        
+        st.info("**Dica:** Passe o mouse sobre os estados para ver detalhes. Você pode arrastar e dar zoom no mapa!")
+    else:
+        st.warning("Nenhum dado geográfico disponível para exibir no mapa.")
+    
+    # Análise por Estado
+    st.markdown('<div class="sub-header">Vendas por Estado</div>', unsafe_allow_html=True)
+    
+    vendas_estado = df_geo_filtrado.groupby('estado').agg({
+        'volume_hl': 'sum',
+        'valor': 'sum',
+        'cliente_id': 'nunique'
+    }).reset_index()
+    vendas_estado.columns = ['estado', 'volume_hl', 'valor', 'num_clientes']
+    vendas_estado = vendas_estado.sort_values('volume_hl', ascending=False)
+    
+    # Adicionar nome do estado
+    vendas_estado['nome_estado'] = vendas_estado['estado'].map(lambda x: coordenadas_estados.get(x, {}).get('nome', x))
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Gráfico de barras por estado
+        fig_estado_bar = px.bar(
+            vendas_estado.head(15),
+            x='estado',
+            y='volume_hl',
+            title='Top 15 Estados por Volume (HL)',
+            labels={'estado': 'Estado', 'volume_hl': 'Volume (HL)'},
+            color='volume_hl',
+            color_continuous_scale='Reds',
+            hover_data={'nome_estado': True, 'valor': ':.2f', 'num_clientes': True}
+        )
+        st.plotly_chart(fig_estado_bar, use_container_width=True)
+    
+    with col2:
+        # Gráfico de pizza - participação por estado
+        fig_pizza_estado = px.pie(
+            vendas_estado.head(10),
+            values='volume_hl',
+            names='estado',
+            title='Top 10 Estados - Participação no Volume',
+            hover_data=['nome_estado']
+        )
+        st.plotly_chart(fig_pizza_estado, use_container_width=True)
+    
+    # Análise por Cidade
+    st.markdown('<div class="sub-header">Top Cidades por Volume</div>', unsafe_allow_html=True)
+    
+    vendas_cidade = df_geo_filtrado.groupby(['estado', 'cidade']).agg({
+        'volume_hl': 'sum',
+        'valor': 'sum',
+        'cliente_id': 'nunique'
+    }).reset_index()
+    vendas_cidade.columns = ['estado', 'cidade', 'volume_hl', 'valor', 'num_clientes']
+    vendas_cidade = vendas_cidade.sort_values('volume_hl', ascending=False)
+    vendas_cidade['cidade_estado'] = vendas_cidade['cidade'] + ' - ' + vendas_cidade['estado']
+    
+    # Gráfico de barras - Top 20 cidades
+    fig_cidade = px.bar(
+        vendas_cidade.head(20),
+        x='cidade_estado',
+        y='volume_hl',
+        title='Top 20 Cidades por Volume (HL)',
+        labels={'cidade_estado': 'Cidade - Estado', 'volume_hl': 'Volume (HL)'},
+        color='volume_hl',
+        color_continuous_scale='Blues',
+        hover_data={'num_clientes': True}
+    )
+    fig_cidade.update_xaxes(tickangle=-45)
+    st.plotly_chart(fig_cidade, use_container_width=True)
+    
+    # Mapa Geográfico com volume por marca
+    st.markdown('<div class="sub-header">Distribuição Geográfica por Marca</div>', unsafe_allow_html=True)
+    
+    # Filtro de marca
+    marcas_disponiveis = sorted(df_geo_filtrado['marca'].unique())
+    marca_selecionada = st.selectbox(
+        'Selecione uma marca para visualizar no mapa:',
+        marcas_disponiveis,
+        key='mapa_marca'
+    )
+    
+    # Filtrar dados pela marca selecionada
+    df_marca = df_geo_filtrado[df_geo_filtrado['marca'] == marca_selecionada].copy()
+    
+    # Agregar por estado
+    vendas_marca_estado = df_marca.groupby('estado').agg({
+        'volume_hl': 'sum',
+        'valor': 'sum',
+        'cliente_id': 'nunique'
+    }).reset_index()
+    vendas_marca_estado.columns = ['estado', 'volume_hl', 'valor', 'num_clientes']
+    vendas_marca_estado = vendas_marca_estado.sort_values('volume_hl', ascending=False)
+    
+    # Adicionar nome do estado
+    vendas_marca_estado['nome_estado'] = vendas_marca_estado['estado'].map(
+        lambda x: coordenadas_estados.get(x, {}).get('nome', x)
+    )
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Gráfico de barras por estado
+        fig_estado_marca = px.bar(
+            vendas_marca_estado.head(15),
+            x='estado',
+            y='volume_hl',
+            title=f'Top 15 Estados - {marca_selecionada}',
+            labels={'estado': 'Estado', 'volume_hl': 'Volume (HL)'},
+            color='volume_hl',
+            color_continuous_scale='Reds',
+            hover_data={'nome_estado': True, 'valor': ':.2f', 'num_clientes': True}
+        )
+        st.plotly_chart(fig_estado_marca, use_container_width=True)
+    
+    with col2:
+        # Gráfico de pizza - participação por estado
+        fig_pizza_marca = px.pie(
+            vendas_marca_estado.head(10),
+            values='volume_hl',
+            names='estado',
+            title=f'Top 10 Estados - {marca_selecionada}',
+            hover_data=['nome_estado']
+        )
+        st.plotly_chart(fig_pizza_marca, use_container_width=True)
+    
+    # Análise por Marca e Estado
+    st.markdown('<div class="sub-header">Mapa Geográfico: Volume por Marca</div>', unsafe_allow_html=True)
+    
+    # Seletor de marca para o mapa
+    marcas_disponiveis_mapa = sorted(df_geo_filtrado['marca'].dropna().unique().tolist())
+    if marcas_disponiveis_mapa:
+        marca_mapa_selecionada = st.selectbox("Selecione uma Marca para visualizar no mapa", marcas_disponiveis_mapa, key='marca_mapa')
+        
+        # Filtrar dados pela marca selecionada
+        df_marca = df_geo_filtrado[df_geo_filtrado['marca'] == marca_mapa_selecionada]
+        vendas_marca_estado = df_marca.groupby('estado').agg({
+            'volume_hl': 'sum',
+            'valor': 'sum',
+            'cliente_id': 'nunique'
+        }).reset_index()
+        
+        # Adicionar nome do estado
+        vendas_marca_estado['nome_estado'] = vendas_marca_estado['estado'].map(
+            lambda x: coordenadas_estados.get(x, {}).get('nome', x)
+        )
+        
+        if len(vendas_marca_estado) > 0:
+            # URL do GeoJSON dos estados brasileiros
+            geojson_url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+            
+            fig_mapa_marca = px.choropleth_mapbox(
+                vendas_marca_estado,
+                geojson=geojson_url,
+                locations='estado',
+                featureidkey="properties.sigla",
+                color='volume_hl',
+                hover_name='nome_estado',
+                hover_data={
+                    'estado': True,
+                    'volume_hl': ':.2f',
+                    'valor': ':.2f',
+                    'cliente_id': True
+                },
+                color_continuous_scale='Blues',
+                labels={
+                    'volume_hl': 'Volume (HL)',
+                    'valor': 'Valor (R$)',
+                    'cliente_id': 'Nº Clientes',
+                    'estado': 'UF'
+                },
+                title=f'Distribuição de {marca_mapa_selecionada} pelos Estados',
+                zoom=3.5,
+                center=dict(lat=-14, lon=-52),
+                mapbox_style='carto-positron',
+                opacity=0.7
+            )
+            
+            fig_mapa_marca.update_layout(
+                height=600,
+                margin={"r":0,"t":60,"l":0,"b":0},
+                coloraxis_colorbar=dict(
+                    title="Volume (HL)",
+                    thickness=20,
+                    len=0.7
+                )
+            )
+            
+            st.plotly_chart(fig_mapa_marca, use_container_width=True)
+    
+    # Heatmap tradicional
+    st.markdown('<div class="sub-header">Tabela de Calor: Todas as Marcas x Estados</div>', unsafe_allow_html=True)
+    
+    marca_estado = df_geo_filtrado.groupby(['marca', 'estado'])['volume_hl'].sum().reset_index()
+    marca_estado_pivot = marca_estado.pivot(index='marca', columns='estado', values='volume_hl').fillna(0)
+    
+    fig_heatmap = px.imshow(
+        marca_estado_pivot,
+        labels=dict(x="Estado", y="Marca", color="Volume (HL)"),
+        title='Mapa de Calor: Volume por Marca e Estado',
+        color_continuous_scale='YlOrRd',
+        aspect='auto'
+    )
+    fig_heatmap.update_xaxes(side="bottom")
+    st.plotly_chart(fig_heatmap, use_container_width=True)
+    
+    # Tabela Detalhada - Top Clientes por Região
+    st.markdown('<div class="sub-header">Top Clientes por Região</div>', unsafe_allow_html=True)
+    
+    estado_selecionado = st.selectbox("Selecione um Estado", sorted(df_geo_filtrado['estado'].dropna().unique().tolist()), key='estado_detalhe')
+    
+    df_estado = df_geo_filtrado[df_geo_filtrado['estado'] == estado_selecionado]
+    
+    clientes_estado = df_estado.groupby(['cliente_id', 'cidade', 'marca']).agg({
+        'volume_hl': 'sum',
+        'valor': 'sum'
+    }).reset_index()
+    clientes_estado = clientes_estado.sort_values('volume_hl', ascending=False).head(20)
+    clientes_estado['cliente_display'] = 'Cliente ' + clientes_estado['cliente_id'].astype(str)
+    
+    st.dataframe(
+        clientes_estado[['cliente_display', 'cidade', 'marca', 'volume_hl', 'valor']].style.format({
+            'volume_hl': '{:.2f} HL',
+            'valor': 'R$ {:.2f}'
+        }),
+        use_container_width=True,
+        column_config={
+            "cliente_display": "Cliente",
+            "cidade": "Cidade",
+            "marca": "Marca",
+            "volume_hl": "Volume",
+            "valor": "Valor"
+        }
+    )
+
+# ============================================================================
+# PÁGINA 6: DADOS DETALHADOS
 # ============================================================================
 elif page == "Dados Detalhados":
     

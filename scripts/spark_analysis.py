@@ -796,11 +796,12 @@ def main():
     logger.step("ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK")
     logger.info(f"Data de execução: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Caminhos dos arquivos
-    BASE_DIR = r"C:\Users\matheus.rodrigues\Downloads\Case"
-    SALES_PATH = rf"{BASE_DIR}\input\sales.csv"
-    METAS_PATH = rf"{BASE_DIR}\input\metas por marca.csv"
-    OUTPUT_DIR = rf"{BASE_DIR}\output"
+    # Caminhos dos arquivos (detecta automaticamente o diretório do script)
+    import os
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    SALES_PATH = os.path.join(BASE_DIR, "input", "sales.csv")
+    METAS_PATH = os.path.join(BASE_DIR, "input", "metas por marca.csv")
+    OUTPUT_DIR = os.path.join(BASE_DIR, "output")
     
     try:
         # 1. Criar sessão Spark

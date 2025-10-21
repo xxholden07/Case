@@ -31,8 +31,11 @@ def consultar_cep(cep):
 def enriquecer_banco():
     """Enriquece banco SQLite com dados de CEP"""
     
-    db_path = r"C:\Users\matheus.rodrigues\Downloads\Case\output\vendas_analytics.db"
-    conn = sqlite3.connect(db_path)
+    # Caminho do banco (detecta automaticamente o diretório do script)
+    base_dir = Path(__file__).parent.parent
+    db_path = base_dir / "output" / "vendas_analytics.db"
+    
+    conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
     
     print("\n" + "="*70)

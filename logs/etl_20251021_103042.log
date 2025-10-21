@@ -1,0 +1,127 @@
+2025-10-21 10:30:42 | INFO     | Log iniciado: logs/etl_20251021_103042.log
+2025-10-21 10:30:42 | INFO     | Nível de log: INFO
+2025-10-21 10:30:42 | INFO     | ======================================================================
+2025-10-21 10:30:42 | INFO     | 
+2025-10-21 10:30:42 | INFO     | ======================================================================
+2025-10-21 10:30:42 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-21 10:30:42 | INFO     | ======================================================================
+2025-10-21 10:30:42 | INFO     | Data de execução: 2025-10-21 10:30:42
+2025-10-21 10:30:42 | INFO     | Criando Spark Session...
+2025-10-21 10:30:45 | INFO     | ✓ Spark Session criada com sucesso
+2025-10-21 10:30:45 | INFO     | 
+2025-10-21 10:30:45 | INFO     | ======================================================================
+2025-10-21 10:30:45 | INFO     | ETAPA: CARREGAMENTO DE DADOS
+2025-10-21 10:30:45 | INFO     | ======================================================================
+2025-10-21 10:30:45 | INFO     | Carregando dados de vendas: /home/matheus/Documentos/Case/input/sales.csv
+2025-10-21 10:30:50 | INFO     | → df_sales (100% PySpark): 28,884 registros
+2025-10-21 10:30:50 | INFO     | Carregando arquivo de metas: /home/matheus/Documentos/Case/input/metas por marca.csv
+2025-10-21 10:30:50 | INFO     | → df_metas: 20 registros
+2025-10-21 10:30:50 | INFO     | 
+2025-10-21 10:30:50 | INFO     | ======================================================================
+2025-10-21 10:30:50 | INFO     | ETAPA: EXPLORAÇÃO DOS DADOS
+2025-10-21 10:30:50 | INFO     | ======================================================================
+2025-10-21 10:30:50 | INFO     | ESTRUTURA DO ARQUIVO DE VENDAS
+2025-10-21 10:30:50 | INFO     | ESTATÍSTICAS DESCRITIVAS - VENDAS
+2025-10-21 10:30:52 | INFO     | AMOSTRA DOS DADOS DE VENDAS (5 registros)
+2025-10-21 10:30:52 | INFO     | CONTAGEM DE REGISTROS POR COLUNA
+2025-10-21 10:30:52 | INFO     | Código do Cliente             :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:53 | INFO     | cod material                  :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:53 | WARNING  | b2b_status                    :   28853 não-nulos |      31 nulos (0.11%)
+2025-10-21 10:30:53 | INFO     | volume_hl                     :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:53 | INFO     | valor                         :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:54 | INFO     | data_doc                      :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:54 | WARNING  | materialPackaging             :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-21 10:30:54 | WARNING  | brand                         :   28861 não-nulos |      23 nulos (0.08%)
+2025-10-21 10:30:54 | WARNING  | brand_desc                    :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-21 10:30:54 | WARNING  | material                      :   28606 não-nulos |     278 nulos (0.96%)
+2025-10-21 10:30:55 | INFO     | CEP_cliente                   :   28884 não-nulos |       0 nulos (0.00%)
+2025-10-21 10:30:55 | INFO     | ESTRUTURA DO ARQUIVO DE METAS
+2025-10-21 10:30:55 | INFO     | DADOS DE METAS
+2025-10-21 10:30:55 | INFO     | 
+2025-10-21 10:30:55 | INFO     | ======================================================================
+2025-10-21 10:30:55 | INFO     | ETAPA: LIMPEZA E PREPARAÇÃO DOS DADOS
+2025-10-21 10:30:55 | INFO     | ======================================================================
+2025-10-21 10:30:55 | INFO     | Coluna data_doc convertida para DateType
+2025-10-21 10:30:55 | INFO     | Tratamento de valores ausentes:
+2025-10-21 10:30:55 | WARNING  | materialPackaging: 23 valores nulos preenchidos com 0
+2025-10-21 10:30:55 | WARNING  | brand: 23 valores nulos preenchidos com 0
+2025-10-21 10:30:56 | WARNING  | b2b_status: 31 valores nulos preenchidos com False
+2025-10-21 10:30:56 | WARNING  | brand_desc: 278 valores nulos preenchidos
+2025-10-21 10:30:56 | WARNING  | material: 278 valores nulos preenchidos
+2025-10-21 10:30:56 | INFO     | ✓ Limpeza concluída: 28884 registros preparados
+2025-10-21 10:30:56 | INFO     | 
+2025-10-21 10:30:56 | INFO     | ======================================================================
+2025-10-21 10:30:56 | INFO     | ETAPA: CRIAÇÃO DO MODELO DIMENSIONAL (STAR SCHEMA)
+2025-10-21 10:30:56 | INFO     | ======================================================================
+2025-10-21 10:30:56 | INFO     | Criando dim_cliente...
+2025-10-21 10:30:56 | INFO     | → dim_cliente: 58 registros
+2025-10-21 10:30:56 | INFO     | Criando dim_produto...
+2025-10-21 10:30:56 | INFO     | → dim_produto: 27 registros
+2025-10-21 10:30:56 | INFO     | Criando fato_vendas...
+2025-10-21 10:30:57 | INFO     | → fato_vendas: 28,884 registros
+2025-10-21 10:30:57 | INFO     | ✓ Modelo dimensional criado com sucesso!
+2025-10-21 10:30:57 | INFO     | Preparando dim_cliente para enriquecimento de CEP...
+2025-10-21 10:30:57 | INFO     | 
+2025-10-21 10:30:57 | INFO     | ======================================================================
+2025-10-21 10:30:57 | INFO     | ETAPA: CRIAÇÃO DA VISÃO CONSOLIDADA POR CLIENTE
+2025-10-21 10:30:57 | INFO     | ======================================================================
+2025-10-21 10:30:57 | INFO     | Identificando última compra de cada cliente...
+2025-10-21 10:30:57 | INFO     | Agregando dados por cliente e mês...
+2025-10-21 10:30:57 | INFO     | Calculando métricas rolling (3 e 6 meses)...
+2025-10-21 10:30:57 | INFO     | Consolidando visão final por cliente...
+2025-10-21 10:30:59 | INFO     | ✓ Visão consolidada criada: 58 clientes
+2025-10-21 10:30:59 | INFO     | AMOSTRA DA VISÃO CONSOLIDADA
+2025-10-21 10:31:00 | INFO     | 
+2025-10-21 10:31:00 | INFO     | ======================================================================
+2025-10-21 10:31:00 | INFO     | ETAPA: DISTRIBUIÇÃO DE METAS POR CLIENTE - ANO 2025
+2025-10-21 10:31:00 | INFO     | ======================================================================
+2025-10-21 10:31:00 | INFO     | Filtrando metas do ano 2025...
+2025-10-21 10:31:00 | INFO     | → metas_2025: 10 registros
+2025-10-21 10:31:00 | INFO     | Calculando volume por cliente e marca...
+2025-10-21 10:31:00 | INFO     | Calculando volume total por marca...
+2025-10-21 10:31:00 | INFO     | Calculando participação percentual de cada cliente...
+2025-10-21 10:31:00 | INFO     | Distribuindo metas proporcionalmente...
+2025-10-21 10:31:00 | INFO     | ✓ Metas distribuídas: 325 registros (cliente x marca)
+2025-10-21 10:31:00 | INFO     | AMOSTRA DAS METAS DISTRIBUÍDAS
+2025-10-21 10:31:01 | INFO     | VALIDAÇÃO: Comparação entre Meta da Marca e Soma das Metas dos Clientes
+2025-10-21 10:31:02 | WARNING  | ATENÇÃO: 8 marcas com diferença entre meta e soma das metas dos clientes
+2025-10-21 10:31:02 | INFO     | 
+2025-10-21 10:31:02 | INFO     | ======================================================================
+2025-10-21 10:31:02 | INFO     | ETAPA: EXPORTAÇÃO DE RESULTADOS
+2025-10-21 10:31:02 | INFO     | ======================================================================
+2025-10-21 10:31:02 | INFO     | Exportando visao_consolidada...
+2025-10-21 10:31:03 | INFO     | CSV (Spark): /home/matheus/Documentos/Case/output/csv/visao_consolidada
+2025-10-21 10:31:04 | INFO     | Parquet: /home/matheus/Documentos/Case/output/parquet/visao_consolidada
+2025-10-21 10:31:04 | INFO     | Exportando metas_por_cliente...
+2025-10-21 10:31:04 | INFO     | CSV (Spark): /home/matheus/Documentos/Case/output/csv/metas_por_cliente
+2025-10-21 10:31:05 | INFO     | Parquet: /home/matheus/Documentos/Case/output/parquet/metas_por_cliente
+2025-10-21 10:31:05 | INFO     | Exportando dim_cliente...
+2025-10-21 10:31:05 | INFO     | CSV (Spark): /home/matheus/Documentos/Case/output/csv/dim_cliente
+2025-10-21 10:31:05 | INFO     | Parquet: /home/matheus/Documentos/Case/output/parquet/dim_cliente
+2025-10-21 10:31:05 | INFO     | Exportando fato_vendas...
+2025-10-21 10:31:06 | INFO     | CSV (Spark): /home/matheus/Documentos/Case/output/csv/fato_vendas
+2025-10-21 10:31:06 | INFO     | Parquet: /home/matheus/Documentos/Case/output/parquet/fato_vendas
+2025-10-21 10:31:06 | INFO     | Exportando dim_produto...
+2025-10-21 10:31:06 | INFO     | CSV (Spark): /home/matheus/Documentos/Case/output/csv/dim_produto
+2025-10-21 10:31:07 | INFO     | Parquet: /home/matheus/Documentos/Case/output/parquet/dim_produto
+2025-10-21 10:31:07 | INFO     | ✓ Todas as exportações concluídas!
+2025-10-21 10:31:07 | INFO     | 
+2025-10-21 10:31:07 | INFO     | ======================================================================
+2025-10-21 10:31:07 | INFO     | ETAPA: PROCESSAMENTO CONCLUÍDO COM SUCESSO!
+2025-10-21 10:31:07 | INFO     | ======================================================================
+2025-10-21 10:31:07 | INFO     | Resultados salvos em: /home/matheus/Documentos/Case/output
+2025-10-21 10:31:07 | INFO     | 
+Arquivos gerados:
+2025-10-21 10:31:07 | INFO     |   • visao_consolidada: Métricas consolidadas por cliente
+2025-10-21 10:31:07 | INFO     |   • metas_por_cliente: Metas distribuídas por cliente e marca
+2025-10-21 10:31:07 | INFO     |   • dim_cliente: Dimensão de clientes
+2025-10-21 10:31:07 | INFO     |   • dim_produto: Dimensão de produtos/marcas
+2025-10-21 10:31:07 | INFO     |   • dim_tempo: Dimensão de tempo
+2025-10-21 10:31:07 | INFO     |   • fato_vendas: Fato de vendas (star schema)
+2025-10-21 10:31:07 | INFO     | 
+2025-10-21 10:31:07 | INFO     | ======================================================================
+2025-10-21 10:31:07 | INFO     | ETL FINALIZADO
+2025-10-21 10:31:07 | INFO     | Tempo total: 0:00:24.217469
+2025-10-21 10:31:07 | INFO     | Log salvo em: logs/etl_20251021_103042.log
+2025-10-21 10:31:07 | INFO     | ======================================================================
+2025-10-21 10:31:07 | INFO     | Sessão Spark encerrada

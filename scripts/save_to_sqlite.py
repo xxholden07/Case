@@ -12,9 +12,10 @@ def criar_banco_sqlite():
     print("EXPORTANDO DADOS PARA SQLITE")
     print("="*70)
     
-    # Caminho do banco
-    db_path = r"C:\Users\matheus.rodrigues\Downloads\Case\output\vendas_analytics.db"
-    csv_dir = r"C:\Users\matheus.rodrigues\Downloads\Case\output\csv"
+    # Caminho do banco (detecta automaticamente o diretório do script)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    db_path = os.path.join(base_dir, "output", "vendas_analytics.db")
+    csv_dir = os.path.join(base_dir, "output", "csv")
     
     # Conectar ao SQLite
     conn = sqlite3.connect(db_path)

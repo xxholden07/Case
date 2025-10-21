@@ -39,8 +39,9 @@ print(f"Iniciando processamento ETL - {datetime.now().strftime('%Y-%m-%d %H:%M:%
 # COMMAND ----------
 
 # Widgets para parametrização (podem ser definidos no Job)
-dbutils.widgets.text("input_path", "/FileStore/tables/case/input", "Caminho dos arquivos de entrada")
-dbutils.widgets.text("output_path", "/FileStore/tables/case/output", "Caminho de saída")
+# Usando /FileStore que está disponível mesmo com DBFS público desabilitado
+dbutils.widgets.text("input_path", "/FileStore/tables/heineken", "Caminho dos arquivos de entrada")
+dbutils.widgets.text("output_path", "/FileStore/tables/heineken/output", "Caminho de saída")
 dbutils.widgets.text("ano_meta", "2025", "Ano para distribuição de metas")
 
 # Obter valores
@@ -51,6 +52,27 @@ ANO_META = int(dbutils.widgets.get("ano_meta"))
 print(f"Caminho de entrada: {INPUT_PATH}")
 print(f"Caminho de saída: {OUTPUT_PATH}")
 print(f"Ano de metas: {ANO_META}")
+
+# Verificar se os arquivos existem
+try:
+    files = dbutils.fs.ls(INPUT_PATH)
+    print(f"\nArquivos encontrados em {INPUT_PATH}:")
+    for file in files:
+        print(f"  - {file.name} ({file.size} bytes)")
+    print("\nSUCESSO! Arquivos acessíveis.")
+except Exception as e:
+    print(f"\nERRO: Não foi possível acessar {INPUT_PATH}")
+    print(f"Erro: {str(e)}")
+    print("\n" + "="*80)
+    print("SOLUÇÃO: Faça upload dos arquivos via interface:")
+    print("1. Menu lateral esquerdo > DATA")
+    print("2. Clique em 'Create' ou '+' > Upload File")
+    print("3. Navegue até: /FileStore/tables/")
+    print("4. Crie a pasta 'heineken'")
+    print("5. Faça upload de:")
+    print("   - sales.csv")
+    print("   - metas por marca.csv")
+    print("="*80)
 
 # COMMAND ----------
 

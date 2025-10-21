@@ -1,0 +1,22 @@
+2025-10-21 10:17:03 | INFO     | Log iniciado: logs/etl_20251021_101703.log
+2025-10-21 10:17:03 | INFO     | Nível de log: INFO
+2025-10-21 10:17:03 | INFO     | ======================================================================
+2025-10-21 10:17:03 | INFO     | 
+2025-10-21 10:17:03 | INFO     | ======================================================================
+2025-10-21 10:17:03 | INFO     | ETAPA: ANÁLISE DE VENDAS E DISTRIBUIÇÃO DE METAS COM APACHE SPARK
+2025-10-21 10:17:03 | INFO     | ======================================================================
+2025-10-21 10:17:03 | INFO     | Data de execução: 2025-10-21 10:17:03
+2025-10-21 10:17:03 | INFO     | Criando Spark Session...
+2025-10-21 10:17:03 | ERROR    | EXCEÇÃO : ERRO DURANTE O PROCESSAMENTO: Only remote Spark sessions using Databricks Connect are supported. Use DatabricksSession.builder to create a remote Spark session instead.
+Refer to https://docs.databricks.com/dev-tools/databricks-connect.html on how to configure Databricks Connect.
+Traceback (most recent call last):
+  File "/home/matheus/Documentos/Case/scripts/spark_analysis.py", line 807, in main
+    spark = criar_spark_session()
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matheus/Documentos/Case/scripts/spark_analysis.py", line 37, in criar_spark_session
+    .getOrCreate()
+     ^^^^^^^^^^^^^
+  File "/home/matheus/.pyenv/versions/3.11.9/lib/python3.11/site-packages/pyspark/sql/session.py", line 534, in getOrCreate
+    raise RuntimeError(
+RuntimeError: Only remote Spark sessions using Databricks Connect are supported. Use DatabricksSession.builder to create a remote Spark session instead.
+Refer to https://docs.databricks.com/dev-tools/databricks-connect.html on how to configure Databricks Connect.
